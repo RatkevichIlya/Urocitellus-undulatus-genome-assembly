@@ -25,7 +25,7 @@ Genome assemblies
 - NextPolish - polishing the assembly with high quality Illumina reads
 Assemblies evaluation
 - BUSCO - evaluation of genome assembly completeness
-- BUSCO glires_odb10 dataset
+- BUSCO mammalia_odb12 dataset
 - Quast - assessment the quality of genome assembly
 - BlobToolKit – interactive quality assessment of genome assemblies
 Genome annotation
