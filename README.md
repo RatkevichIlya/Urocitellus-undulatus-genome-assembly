@@ -547,47 +547,26 @@ iqtree2 -s concatenated.fasta -m MFP -B 1000 -alrt 1000 -T AUTO --prefix 15sampl
 
 ## References
 
-fastp – Chen S. (2023). fastp: an ultra-fast all-in-one FASTQ preprocessor. iMeta, 2(1), e107. https://doi.org/10.1002/imt2.107;
-
-NanoPack – De Coster W., D’Hert S., Schultz D.T., Cruts M., Van Broeckhoven C. (2018). NanoPack: visualizing and processing long-read sequencing data. Bioinformatics, 34(15), 2666–2669. https://doi.org/10.1093/bioinformatics/bty149;
-
-SeqKit 2.0 – Shen W., Le S., Li Y., Hu F. (2024). SeqKit 2.0: a powerful and ultrafast toolkit for FASTA/Q file manipulation. iMeta, 3(1), e191. https://doi.org/10.1002/imt2.191;
-dep – slw287r. (2024). dep: Data Evaluation Pipeline. GitHub repository. https://github.com/slw287r/dep;
-
-MaSuRCA – Zimin A.V., Puiu D., Luo M.-C., Zhu T., Koren S., Marçais G., Yorke J.A., Dvořák J., Salzberg S.L. (2017). Hybrid assembly of the large and highly repetitive genome of Aegilops tauschii, a progenitor of bread wheat, with the MaSuRCA mega-reads algorithm. Genome Research, 27(5), 787–792. https://doi.org/10.1101/gr.213405.116;
-
-CABOG (в составе MaSuRCA) – Miller J.R., Delcher A.L., Koren S., Venter E., Walenz B.P., Brownley A., Johnson J., Li K., Mobarry C., Sutton G. (2008). Aggressive assembly of pyrosequencing reads with mates. Bioinformatics, 24(24), 2818–2824. https://doi.org/10.1093/bioinformatics/btn548;
-
-wtdbg2 – Ruan J., Li H. (2019). Fast and accurate long-read assembly with wtdbg2. Nature Methods, 17(2), 155–158. https://doi.org/10.1038/s41592-019-0669-3;
-
-Pilon – Walker B.J., Abeel T., Shea T., Priest M., Abouelliel A., Sakthikumar S., Cuomo C.A., Zeng Q., Wortman J., Young S.K., Earl A.M. (2014). Pilon: An integrated tool for comprehensive microbial variant detection and genome assembly improvement. PLoS ONE, 9(11), e112963. https://doi.org/10.1371/journal.pone.0112963;
-
-QUAST-LG – Mikheenko A., Prjibelski A., Saveliev V., Antipov D., Gurevich A. (2018). Versatile genome assembly evaluation with QUAST-LG. Bioinformatics, 34(13), i142–i150. https://doi.org/10.1093/bioinformatics/bty266;
-
-BUSCO – Manni M., Berkeley M.R., Seppey M., Simão F.A., Zdobnov E.M. (2021). BUSCO Update: Novel and streamlined workflows along with broader and deeper phylogenetic coverage for scoring of eukaryotic, prokaryotic, and viral genomes. Molecular Biology and Evolution, 38(10), 4647–4654. https://doi.org/10.1093/molbev/msab199;
-
-BlobToolKit – Challis R., Richards E., Rajan J., Cochrane G., Blaxter M. (2020). BlobToolKit – interactive quality assessment of genome assemblies. G3: Genes|Genomes|Genetics, 10(4), 1361–1374. https://doi.org/10.1534/g3.119.400908;
-
-RepeatModeler – Dfam-consortium. (2024). RepeatModeler. GitHub repository. https://github.com/Dfam-consortium/RepeatModeler;
-
-RepeatMasker – Dfam-consortium. (2017). RepeatMasker. GitHub repository. https://github.com/Dfam-consortium/RepeatMasker;
-
-RepBase – Bao W., Kojima K.K., Kohany O. (2015). Repbase Update, a database of repetitive elements in eukaryotic genomes. Mobile DNA, 6, 11. https://doi.org/10.1186/s13100-015-0041-9;
-
-minimap2 – Li H. (2021). New strategies to improve minimap2 alignment accuracy. Bioinformatics, 37(23), 4572–4574. https://doi.org/10.1093/bioinformatics/btab705;
-
-SyRI – Goel M., Sun H., Jiao W.-B., Schneeberger K. (2019). SyRI: finding genomic rearrangements and local sequence differences from whole-genome assemblies. Genome Biology, 20, 277. https://doi.org/10.1186/s13059-019-1911-0;
-
-RagTag – Alonge M., Lebeigle L., Kirsche M., Aganezov S., Wang X., Lippman Z.B., Schatz M.C. (2022). Automated assembly scaffolding elevates a new tomato system for high-throughput genome editing. Genome Biology, 23, 258. https://doi.org/10.1186/s13059-022-02823-7;
-
-plotsr – Goel M., Schneeberger K. (2022). plotsr: visualizing structural similarities and rearrangements between multiple genomes. Bioinformatics, 38(4), 1192–1196. https://doi.org/10.1093/bioinformatics/btac196;
-
-GetOrganelle – Jin J.-J., Yu W.-B., Yang J.-B., Song Y., dePamphilis C.W., Yi T.-S., Li D.-Z. (2020). GetOrganelle: a fast and versatile toolkit for accurate de novo assembly of organelle genomes. Genome Biology, 21, 241. https://doi.org/10.1186/s13059-020-02154-5;
-
-ElasticBLAST – Camacho C., Hatcher E.L., Grigoriev I.V., etc. (2023). ElasticBLAST, a cloud-based BLAST tool. BMC Bioinformatics, 24, 95. https://doi.org/10.1186/s12859-023-05245-9;
-
-MAFFT-DASH – Rozewicki J., Li S., Amada K.M., Standley D.M., Katoh K. (2019). MAFFT-DASH: integrated protein sequence and structure alignment. Nucleic Acids Research, 47(W1), W5–W10. https://doi.org/10.1093/nar/gkz342;
-
-Gblocks – Talavera G., Castresana J. (2007). Improvement of phylogenies after removing divergent and ambiguously aligned blocks from protein sequence alignments. Systematic Biology, 56(4), 564–577. https://doi.org/10.1080/10635150701472164;
-
-AMAS – Borowiec M.L. (2016). AMAS: a fast tool for alignment manipulation and computing of summary statistics. PeerJ, 4, e1660. https://doi.org/10.7717/peerj.1660.
+1. fastp – Chen S. (2023). fastp: an ultra-fast all-in-one FASTQ preprocessor. iMeta, 2(1), e107. https://doi.org/10.1002/imt2.107;
+2. NanoPack – De Coster W., D’Hert S., Schultz D.T., Cruts M., Van Broeckhoven C. (2018). NanoPack: visualizing and processing long-read sequencing data. Bioinformatics, 34(15), 2666–2669. https://doi.org/10.1093/bioinformatics/bty149;
+3. SeqKit 2.0 – Shen W., Le S., Li Y., Hu F. (2024). SeqKit 2.0: a powerful and ultrafast toolkit for FASTA/Q file manipulation. iMeta, 3(1), e191. https://doi.org/10.1002/imt2.191;
+4. dep – slw287r. (2024). dep: Data Evaluation Pipeline. GitHub repository. https://github.com/slw287r/dep;
+5. MaSuRCA – Zimin A.V., Puiu D., Luo M.-C., Zhu T., Koren S., Marçais G., Yorke J.A., Dvořák J., Salzberg S.L. (2017). Hybrid assembly of the large and highly repetitive genome of Aegilops tauschii, a progenitor of bread wheat, with the MaSuRCA mega-reads algorithm. Genome Research, 27(5), 787–792. https://doi.org/10.1101/gr.213405.116;
+6. CABOG (в составе MaSuRCA) – Miller J.R., Delcher A.L., Koren S., Venter E., Walenz B.P., Brownley A., Johnson J., Li K., Mobarry C., Sutton G. (2008). Aggressive assembly of pyrosequencing reads with mates. Bioinformatics, 24(24), 2818–2824. https://doi.org/10.1093/bioinformatics/btn548;
+7. wtdbg2 – Ruan J., Li H. (2019). Fast and accurate long-read assembly with wtdbg2. Nature Methods, 17(2), 155–158. https://doi.org/10.1038/s41592-019-0669-3;
+8. Pilon – Walker B.J., Abeel T., Shea T., Priest M., Abouelliel A., Sakthikumar S., Cuomo C.A., Zeng Q., Wortman J., Young S.K., Earl A.M. (2014). Pilon: An integrated tool for comprehensive microbial variant detection and genome assembly improvement. PLoS ONE, 9(11), e112963. https://doi.org/10.1371/journal.pone.0112963;
+9. QUAST-LG – Mikheenko A., Prjibelski A., Saveliev V., Antipov D., Gurevich A. (2018). Versatile genome assembly evaluation with QUAST-LG. Bioinformatics, 34(13), i142–i150. https://doi.org/10.1093/bioinformatics/bty266;
+10. BUSCO – Manni M., Berkeley M.R., Seppey M., Simão F.A., Zdobnov E.M. (2021). BUSCO Update: Novel and streamlined workflows along with broader and deeper phylogenetic coverage for scoring of eukaryotic, prokaryotic, and viral genomes. Molecular Biology and Evolution, 38(10), 4647–4654. https://doi.org/10.1093/molbev/msab199;
+11. BlobToolKit – Challis R., Richards E., Rajan J., Cochrane G., Blaxter M. (2020). BlobToolKit – interactive quality assessment of genome assemblies. G3: Genes|Genomes|Genetics, 10(4), 1361–1374. https://doi.org/10.1534/g3.119.400908;
+12. RepeatModeler – Dfam-consortium. (2024). RepeatModeler. GitHub repository. https://github.com/Dfam-consortium/RepeatModeler;
+13. RepeatMasker – Dfam-consortium. (2017). RepeatMasker. GitHub repository. https://github.com/Dfam-consortium/RepeatMasker;
+14. RepBase – Bao W., Kojima K.K., Kohany O. (2015). Repbase Update, a database of repetitive elements in eukaryotic genomes. Mobile DNA, 6, 11. https://doi.org/10.1186/s13100-015-0041-9;
+15. minimap2 – Li H. (2021). New strategies to improve minimap2 alignment accuracy. Bioinformatics, 37(23), 4572–4574. https://doi.org/10.1093/bioinformatics/btab705;
+16. SyRI – Goel M., Sun H., Jiao W.-B., Schneeberger K. (2019). SyRI: finding genomic rearrangements and local sequence differences from whole-genome assemblies. Genome Biology, 20, 277. https://doi.org/10.1186/s13059-019-1911-0;
+17. RagTag – Alonge M., Lebeigle L., Kirsche M., Aganezov S., Wang X., Lippman Z.B., Schatz M.C. (2022). Automated assembly scaffolding elevates a new tomato system for high-throughput genome editing. Genome Biology, 23, 258. https://doi.org/10.1186/s13059-022-02823-7;
+18. plotsr – Goel M., Schneeberger K. (2022). plotsr: visualizing structural similarities and rearrangements between multiple genomes. Bioinformatics, 38(4), 1192–1196. https://doi.org/10.1093/bioinformatics/btac196;
+19. GetOrganelle – Jin J.-J., Yu W.-B., Yang J.-B., Song Y., dePamphilis C.W., Yi T.-S., Li D.-Z. (2020). GetOrganelle: a fast and versatile toolkit for accurate de novo assembly of organelle genomes. Genome Biology, 21, 241. https://doi.org/10.1186/s13059-020-02154-5;
+20. ElasticBLAST – Camacho C., Hatcher E.L., Grigoriev I.V., etc. (2023). ElasticBLAST, a cloud-based BLAST tool. BMC Bioinformatics, 24, 95. https://doi.org/10.1186/s12859-023-05245-9;
+21. MAFFT-DASH – Rozewicki J., Li S., Amada K.M., Standley D.M., Katoh K. (2019). MAFFT-DASH: integrated protein sequence and structure alignment. Nucleic Acids Research, 47(W1), W5–W10. https://doi.org/10.1093/nar/gkz342;
+22. Gblocks – Talavera G., Castresana J. (2007). Improvement of phylogenies after removing divergent and ambiguously aligned blocks from protein sequence alignments. Systematic Biology, 56(4), 564–577. https://doi.org/10.1080/10635150701472164;
+23. AMAS – Borowiec M.L. (2016). AMAS: a fast tool for alignment manipulation and computing of summary statistics. PeerJ, 4, e1660. https://doi.org/10.7717/peerj.1660.
