@@ -1,33 +1,49 @@
 # Urocitellus-undulatus-genome-assembly
 
 This repository includes scripts used in the assembly of the *Urocitellus undulatus* genome.
+The workflow presented is not a linked pipeline.
+Variable and path names have sometimes been replaced to simplify command presentation.
 
 ## Requirements
-
-- Linux-based HPC cluster with Slurm
+System requirements
+- Linux-based HPC cluster
 - 512G RAM
-- 4 TB of disk space
+- 4 TB of free disk space
 - Conda (Tested with Miniconda3)
+Raw data preprocessing
 - FastQC - quality control of raw illumina reads
 - MultiQC - visualization of FastQC and BUSCO results
 - SeqKit - assembly of basic statistics for raw data and genomes
 - FastP - filtering and trimming short illumina reads
 - NanoQC - quality control of nanopore raw reads
 - Porechop - filtering and trimming of nanopore reads
+Genome assemblies
 - MaSuRCA - genome assembly and analysis toolkit (installed via Conda)
 - Flye - genome assembler used within MAECI-based pipeline
 - Canu - genome assembler used in the MAECI-based pipeline
 - wtdbg2 - genome assembler used in the MAECI-based pipeline
 - NextPolish - polishing the assembly with high quality Illumina reads
+Assemblies evaluation
 - BUSCO - evaluation of genome assembly completeness
 - BUSCO glires_odb10 dataset
 - Quast - assessment the quality of genome assembly
+- BlobToolKit – interactive quality assessment of genome assemblies
+Genome annotation
 - RepeatModeler - identification of tandem repeats in the genome and creation of a de novo library of them
 - RepeatMasker - tandem repeat masking
-- BRAKER - fully automated method for accurate gene structure annotation
-- BlobToolKit – interactive quality assessment of genome assemblies
-## 1. Installation
+- GeMoMa - a homology-based gene prediction program
+- minimap2 - sequence alignment program
+- ragtag - reference-based scaffolds orientation
+- SYRI - predicting genomic differences between related genomes
+Mitogenome assembly
+- GetOrganelle - mitogenome assembly
+Phylogenetic analysis
+- MAFFT - sequence alignment program
+- Gblocks - alignments filtering
+- AMAS - alignments concatenation 
+- IQ-TREE - phylogenetic tree reconstruction
 
+## 1. Installation
 
 ### 1.1. Create, activate and install tools in Conda environment
 
@@ -48,6 +64,14 @@ TOOLS=(
     nextpolish
     repeatmasker
     repeatmodeler
+    gemoma
+    minimap2
+    ragtag
+    syri
+    getorganelle
+    mafft
+    gblocks
+    amas
 )
 
 # Loop through each tool, create conda environment, and install the package
@@ -61,6 +85,7 @@ for TOOL in "${TOOLS[@]}"; do
     echo "$TOOL installation completed."
 done
 
+# BlobToolKit installation is separated because of another channel
 conda create -n blobtoolkit -y
 conda activate blobtoolkit
 echo "Installing Blobtoolkit from HCC..."
@@ -86,6 +111,7 @@ Evaluation of illumina raw data with FastQC
 conda activate fastqc
 fastqc --outdir <raw-output-dir> <fastq-file1> <fastq-file2>
 ```
+
 FastQC results visualisation using MultiQC
 ```bash
 conda activate multiqc 
@@ -191,6 +217,7 @@ polish_options = -p {multithread_jobs}
 sgs_fofn = ./sgs.fofn
 sgs_options = -max_depth 100 -bwa
 ```
+
 3. Run
 ```bash
 conda activate nextpolish
@@ -202,7 +229,6 @@ nextPolish run.cfg
 conda activate seqkit
 seqkit stats <assembly> > output.txt
 ```
-
 
 5. BUSCO
 ```bash
@@ -242,6 +268,7 @@ SOAP_ASSEMBLY=0
 FLYE_ASSEMBLY=1
 END
 ```
+
 Run the MaSuRCA script to generate a shell script from the config file, then run the resulting script.
 
 ```bash
@@ -305,14 +332,14 @@ rm -rf self-correction/temp.sam self-correction/racon_1.fasta \
        self-correction/racon_2.fasta self-correction/reference.mmi
 ```
 
-
 Further steps to evaluate the resulting assembly correspond to the steps given for running 
 MaSuRCA with default parameters (see section 3.1.).
 
 ## 4. 	Visualization assemblies statistics
+
 Visualization of the obtained statistics for each assembly to identify the most complete and continuous assembly.
 
-Self-written python scripts busqo\_visualization.py and quast\_visualization.py were used 
+Self-written python scripts busco\_visualization.py and quast\_visualization.py were used 
 to visualize BUSCO and quast analysis results, respectively. 
 
 The self-described python script busco_piechart.py was used to visualize the BUSCO scores 
@@ -320,8 +347,7 @@ of the selected genome with the best statistics.
 
 All data and paths to them for self-written python scripts were written directly in the script.
 
-Blobtoolkit tool was used to visualize the baseline statistics with snail-plot.
-
+Blobtoolkit tool was utilized to visualize the baseline statistics with snail-plot.
 ```bash
 conda activate blobtoolkit
 blobtools create --fasta <assembly.fasta> BlobDir
@@ -332,10 +358,188 @@ blobtools view --view snail BlobDir
 
 Further steps include annotation of the most complete genome
 
-### The section is being finalized
+### 1. *De novo* repeats identification with RepeatModeler utilizaton
 
-1. *De novo* repeats identification with RepeatModeler utilizaton
+Activating the conda environment
+```bash
+conda activate repeatmodeler
+```
 
-2. Repeats soft masking with the usage of RepeatMasker
+Create a new RepeatModeler BLAST database from the input genome.
+```bash
+BuildDatabase -name undulatus -engine ncbi genome.fasta
+```
 
-3. 
+De novo repeats identification using RepeatModeler
+```bash
+RepeatModeler -pa 16 -engine ncbi -database ID_Genus-species
+```
+
+Adding species identificator as prefix to each fasta header line
+```bash
+cat consensi.fa.classified | seqkit fx2tab | awk '{ print "urocUnd1_"$0 }' | seqkit tab2fx > consensi.fa.prefix.fa.classified
+```
+
+Separating our repeats library into known and unknown elements
+```bash
+cat consensi.fa.prefix.fa.classified | seqkit fx2tab | grep -v "Unknown" | seqkit tab2fx > consensi.fa.prefix.fa.classified.known
+cat consensi.fa.prefix.fa.classified | seqkit fx2tab | grep "Unknown" | seqkit tab2fx > consensi.fa.prefix.fa.classified.unknown
+```
+
+Quantify number of known and unknown classified elements
+```bash
+grep -c ">" consensi.fa.prefix.fa.classified.known
+grep -c ">" consensi.fa.prefix.fa.classified.unknown
+```
+
+### 2. Repeats annotation and soft masking with the usage of RepeatMasker
+
+conda activate repeatmasking
+
+```bash
+#Variables
+GENOME=genome.fasta
+KNOWN=consensi.fa.prefix.fa.classified.known
+UNKNOWN=consensi.fa.prefix.fa.classified.unknown
+
+# Output directories
+mkdir -p logs 01_simple_out 02_tetrapoda_out 03_known_out 04_unknown_out 05_full_out
+
+# Simple repeats
+RepeatMasker -pa $THREADS -a -e ncbi -dir 01_simple_out -noint -xsmall $GENOME
+
+# Tetrapoda repeats
+RepeatMasker -pa $THREADS -a -e ncbi -dir 02_tetrapoda_out -nolow \
+-species tetrapoda 01_simple_out/$(basename "$GENOME").masked
+
+# Known repeats
+RepeatMasker -pa $THREADS -a -e ncbi -dir 03_known_out -nolow \
+-lib $KNOWN 02_tetrapoda_out/$(basename "$GENOME").masked.masked
+
+# Unknown repeats
+RepeatMasker -pa $THREADS -a -e ncbi -dir 04_unknown_out -nolow \
+-lib $UNKNOWN 03_known_out/$(basename "$GENOME").masked.masked.masked
+
+# Concatenation .out files
+cat 01_simple_out/$(basename "$GENOME").out \
+    <(tail -n +4 02_tetrapoda_out/$(basename "$GENOME").masked.out) \
+    <(tail -n +4 03_known_out/$(basename "$GENOME").masked.masked.out) \
+    <(tail -n +4 04_unknown_out/$(basename "$GENOME").masked.masked.masked.out) \
+    > 05_full_out/genome.full_mask.out
+
+# GFF3
+rmOutToGFF3.pl 05_full_out/genome.full_mask.out > 05_full_out/genome.full_mask.gff3
+
+# Genome soft masking
+bedtools maskfasta -soft -fi "$GENOME" -bed 05_full_out/genome.full_mask.gff3 \
+-fo 05_full_out/genome.full_masked.fasta
+```
+
+The repeats_vis.py script was used to visualize the results of the annotation of repeats.
+
+### 3. Homology-based genome annotation using GeMoMa
+
+The -w parameter was used to prioritize annotations of reference genomes of evolutionarily closer species for annotation.
+
+```bash
+mkdir -p gemoma_results
+
+conda activate gemoma
+
+GeMoMa -Xmx500G GeMoMaPipeline \
+    threads=32 \
+    AnnotationFinalizer.r=NO \
+    p=false \
+    o=true \
+    t=genome.full_masked.fasta \
+    outdir=gemoma_results/ \
+    s=own w=3 i=u_parryii a=genomes/u_parryii/GCF_003426925.1/genomic.gff g=genomes/u_parryii/GCF_003426925.1/GCF_003426925.1_ASM342692v1_genomic.fna \
+    s=own w=2 i=ictidomys a=genomes/Ictidomys_trid/GCF_016881025.1/genomic.gff g=genomes/Ictidomys_trid/GCF_016881025.1/GCF_016881025.1_HiC_Itri_2_genomic.fna \
+    s=own w=2 i=mmm a=genomes/marmarmar/GCF_001458135.2/genomic.gff g=genomes/marmarmar/GCF_001458135.2/GCF_001458135.2_marMar_genomic.fna \
+    s=own w=2 i=marm_flav a=genomes/marm_flav/GCF_047511675.1/genomic.gff g=genomes/marm_flav/GCF_047511675.1/GCF_047511675.1_mMarFla1.hap1_genomic.fna \
+    s=own w=2 i=marm_monax a=genomes/Marmota_monax/GCF_021218885.2/genomic.gff g=genomes/Marmota_monax/GCF_021218885.2/GCF_021218885.2_Marmota_monax_Labrador192_F-V1.1_genomic.fna \
+    s=own w=1 i=norw_rat a=genomes/norway_rat/GCF_036323735.1/genomic.gff g=genomes/norway_rat/GCF_036323735.1/GCF_036323735.1_GRCr8_genomic.fna \
+    s=own w=1 i=black_rat a=genomes/black_rat/GCF_011064425.1/genomic.gff g=genomes/black_rat/GCF_011064425.1/GCF_011064425.1_Rrattus_CSIRO_v1_genomic.fna
+```
+
+The annotation\_vis.py and annotation\_vis_comp.py script were used to visualize the results of gene annotation to visualize 
+the statistics of the obtained genomic annotation and to compare it with the reference genome annotation, respectively.
+
+## 6. Verification of the representativeness of the genome assembly
+
+To analyze structural similarity, we first need to create an extracted_chroms.fasta file that 
+will contain only the assembled chromosomes of the reference genome.
+To do this, create a file chrom_ids.txt containing only the names of the collected chromosomes. 
+Then use seqkit to extract the records.
+
+```bash
+conda activate seqkit
+seqkit grep -f chrom_ids.txt genome.fasta > extracted_chroms.fasta
+```
+
+Reference genome-based orientation of scaffolds. 
+This step greatly accelerates the subsequent assembly of pseudochromosomes.
+Gaps (stretches of "N" characters) are placed between adjacent query sequences to indicate the presence of unknown sequence.
+```bash
+conda activate ragtag
+ragtag.py scaffold -t 32 extracted_chroms.fasta genome.full_masked.fasta
+```
+
+Reference-based assembly of pseudochromosomes for our genome. 
+This is necessary for subsequent structural similarity analysis.
+```bash
+conda activate minimap2
+minimap2 -t 128 -ax asm10 --eqx extracted_chroms.fasta ragtag_output/ragtag.scaffold.fasta > out.sam
+conda activate syri
+chroder -o chroder -F S out.sam extracted_chroms.fasta ragtag_output/ragtag.scaffold.fasta
+```
+
+After obtaining pseudochromosomes, the alignment must be done again. 
+Then we run syri to identify structural differences and visualize the result using plotsr.
+```bash
+conda activate minimap2
+minimap2 -t 32 -ax asm20 --eqx extracted_chroms.fasta chroder.qry.fasta > syri.sam
+conda activate syri
+syri -c syri.sam -r extracted_chroms.fasta -q chroder.qry.fasta -k -F S --nc 32
+# The genomes.txt file contains the name of the assemblies being compared. 
+# The order.txt file contains the names of chromosomes in the order in which they will be displayed by plotsr. 
+plotsr --sr syri.out --genomes genomes.txt -o plotsr.png --chrord order.txt
+```
+
+Visualizations of the distribution of the number of scaffolds aligned to the reference chromosomes and 
+the length of alignments attributable to each chromosome were obtained using the scripts 
+map\_count\_visualization.py and map\_length\_visualization.py, respectively.
+
+## 7. Mitogenome assembly
+
+```bash
+conda activate getorganelle
+get_organelle_from_reads.py -1 reads_R1.fastq.gz -2 reads_R2.fastq.gz \
+  -o mitogenome_output -F animal_mt \
+  -s u_undulatus.fasta,u_richardsonii.fasta,u_parryii1.fasta,u_parryii2.fasta \
+  -t 32
+```
+
+## 8. Phylogenetics analysis
+
+Establish the tools needed for phylogenetic analysis into one environment:
+
+```bash
+conda create -n phylo_env mafft iqtree amas gblocks biopython -c bioconda -c conda-forge
+```
+
+Phylogenetic analysis
+```bash
+conda activate phylo_env
+for gene_set in sets_names.txt; do
+    mafft --auto "$gene_set" > "${gene_set%.fasta}aligned.fasta"
+done
+
+for alignment in *_aligned.fasta; do
+  Gblocks "$alignment" -t=d -b5=h -e=.gb
+done
+
+AMAS.py concat -i *_aligned.fasta.gb -u fasta -y nexus -d dna -t concatenated.fasta
+
+iqtree2 -s concatenated.fasta -m MFP -B 1000 -alrt 1000 -T AUTO --prefix 15samples -o Castor_canadensis_NC_015108_1,Castor_fiber_NC_015072_1
+```
