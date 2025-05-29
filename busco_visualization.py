@@ -2,9 +2,9 @@ import re
 import matplotlib.pyplot as plt
 
 busco_files = {
-    'MaSuRCA(Celera)': '/home/ilya/Desktop/DIPLOMA/Ground_squirrel/busco/miniprot/busco_masurca_celera/run_mammalia_odb12/short_summary.txt',
-    'MaSuRCA(Flye)': '/home/ilya/Desktop/DIPLOMA/Ground_squirrel/busco/miniprot/busco_masurca_flye/run_mammalia_odb12/short_summary.txt',
-    'MAECI': '/home/ilya/Desktop/DIPLOMA/Ground_squirrel/busco/miniprot/busco_maeci/run_mammalia_odb12/short_summary.txt'
+    'MaSuRCA(Celera)': 'PATH__TO_BUSCO_SUMMARY1',
+    'MaSuRCA(Flye)': 'PATH__TO_BUSCO_SUMMARY2',
+    'MAECI': 'PATH__TO_BUSCO_SUMMARY3'
 }
 
 busco_data = {}
